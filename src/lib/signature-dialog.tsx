@@ -1,8 +1,8 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-import { SignatureDrawPad } from "@/components/signature/draw";
-import { SignatureTypePad } from "@/components/signature/type";
-import { SignatureDataRef } from "@/components/signature/types";
+import { SignatureDrawPad } from "@/lib/signature/draw";
+import { SignatureTypePad } from "@/lib/signature/type";
+import { SignatureDataRef } from "@/lib/signature/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -70,6 +70,7 @@ const SignatureDialog = ({ colors, children, setImage }: Props) => {
               Type
             </button>
             <div
+              data-testid="bottom-line"
               className={`absolute bottom-0 left-[-20px] h-0.5 w-20 bg-brand transition-transform ${
                 selectedTab === "type"
                   ? "transform translate-x-24"

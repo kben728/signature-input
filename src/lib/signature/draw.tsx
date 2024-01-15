@@ -83,7 +83,7 @@ const SignatureDrawPad = forwardRef(
           />
         </div>
         <div className="flex bg-canvas border-dashed border-gray-300 border rounded-md w-full sm:w-3/4 lg:w-1/2 h-full">
-          <div className="w-full h-full ">
+          <div className="w-full h-full" data-testid="signature-pad">
             <SignaturePad
               ref={padRef}
               options={{

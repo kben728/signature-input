@@ -88,6 +88,7 @@ const SignatureTypePad = forwardRef(
         </div>
         <div className="flex flex-col items-center w-full h-full max-w-lg">
           <Input
+            data-testid="signature-input"
             className={`outline-none rounded-none h-16 text-4xl font-${FONT_MAP[selectedFont]} text-center border-black border-t-0 border-l-0 border-r-0
           focus-visible:ring-transparent focus-visible:border-t-1 focus-visible:border focus-visible:border-l-1 focus-visible:border-r-1`}
             value={signature}
