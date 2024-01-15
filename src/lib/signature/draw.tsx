@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { ColorPicker, DEFAULT_COLOR } from "./color-picker";
 import { SignatureDataRef, SignaturePadProps } from "./types";
 
-
 const SignatureDrawPad = forwardRef(
   (
     {
