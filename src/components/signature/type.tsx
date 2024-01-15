@@ -1,7 +1,7 @@
 import html2canvas from "html2canvas";
 import {
-  Ref,
   forwardRef,
+  Ref,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -14,12 +14,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { ColorPicker, DEFAULT_COLOR } from "./color-picker";
-import { SignatureDataRef } from "./types";
-
-interface SignatureTypePadProps {
-  colors?: string[];
-  initialColor?: string;
-}
+import { SignatureDataRef, SignaturePadProps } from "./types";
 
 const INITIAL_VALUE = "Signature";
 
@@ -32,7 +27,7 @@ const FONT_MAP: Record<string, string> = {
 
 const SignatureTypePad = forwardRef(
   (
-    { colors, initialColor }: SignatureTypePadProps,
+    { colors, initialColor, setValid }: SignaturePadProps,
     ref: Ref<SignatureDataRef>
   ) => {
     const ref1 = useRef<HTMLLabelElement>(null);
@@ -48,8 +43,9 @@ const SignatureTypePad = forwardRef(
     const [signature, setSignature] = useState(INITIAL_VALUE);
 
     useEffect(() => {
-      if (!signature) {
+      if (!signature && setValid) {
         setSignature(INITIAL_VALUE);
+        setValid(false);
       }
     }, [signature]);
 
@@ -59,6 +55,12 @@ const SignatureTypePad = forwardRef(
 
     const handleClear = () => {
       setSignature(INITIAL_VALUE);
+      setValid?.(false);
+    };
+
+    const handleChange = (value: string) => {
+      setSignature(value);
+      setValid?.(true);
     };
 
     const handleGenerateImage = (): Promise<string> =>
@@ -76,12 +78,14 @@ const SignatureTypePad = forwardRef(
     const isDirty = signature !== INITIAL_VALUE;
 
     return (
-      <div className="flex flex-col items-center gap-2 w-full">
-        <ColorPicker
-          colors={colors}
-          selectedColor={selectedColor}
-          onSelectColor={color => setSelectedColor(color)}
-        />
+      <div className="flex flex-col items-center gap-2 w-full bg-white">
+        <div className="w-1/2 mt-6 mb-2 mr-10">
+          <ColorPicker
+            colors={colors}
+            selectedColor={selectedColor}
+            onSelectColor={color => setSelectedColor(color)}
+          />
+        </div>
         <div className="flex flex-col items-center w-full h-full max-w-lg">
           <Input
             className={`outline-none rounded-none h-16 text-4xl font-${FONT_MAP[selectedFont]} text-center border-black border-t-0 border-l-0 border-r-0
@@ -91,13 +95,13 @@ const SignatureTypePad = forwardRef(
             style={{
               color: selectedColor,
             }}
-            onChange={e => setSignature(e.target.value)}
+            onChange={e => handleChange(e.target.value)}
           />
           <div className="flex items-center gap-2">
             <Button
               size="lg"
               variant="ghost"
-              className={`text-lg ${isDirty ? "text-primary" : "text-gray-500"}`}
+              className={`text-md ${isDirty ? "text-brand" : "text-gray-500"}`}
               onClick={() => handleClear()}>
               {isDirty ? "Clear Signature" : "Sign Here"}
             </Button>

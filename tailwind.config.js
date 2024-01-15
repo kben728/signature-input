@@ -24,17 +24,19 @@ module.exports = {
         meddon: ['Meddon', "cursive"],
       },
       textColor: {
-        primary: "#4536E3",
+        brand: "#4536E3",
       },
       borderColor: {
-        primary: "#4536E3",
+        brand: "#4536E3",
+        dialogAccent: "#F6F8FA",
       },
       outlineColor: {
-        primary: "#4536E3",
+        brand: "#4536E3",
       },
       colors: {
         brand: "#4536E3",
         canvas: "#FCFDFE",
+        dialogAccent: "#F6F8FA",
         "primary-background": "#D7DFEB",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

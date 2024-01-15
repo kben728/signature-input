@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { SignatureDrawPad } from "@/components/signature/draw";
 import { SignatureTypePad } from "@/components/signature/type";
@@ -14,13 +14,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 
 const colors = ["black", "#2293FB", "#4536E3"];
 
@@ -28,14 +23,22 @@ function App() {
   const ref = useRef<SignatureDataRef>(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
   const [isColorUniform, setIsColorUniform] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<"draw" | "type">("draw");
+  const [submitValid, setSubmitValid] = useState(false);
 
   const handleExport = async () => {
     const data = (await ref.current?.getData()) ?? null;
     setBase64Image(data);
+    setSubmitValid(false);
   };
 
+  useEffect(() => {
+    setSubmitValid(false);
+  }, [selectedTab]);
+
+  console.log("render", submitValid);
   return (
-    <div className="min-h-screen flex flex-col gap-4 justify-center items-center bg-primary-background">
+    <div className="min-h-screen flex flex-col gap-4 justify-center items-center">
       {base64Image && (
         <div className="p-4 mb-10 flex flex-col items-center max-h-[500px] max-w-[500px] gap-2">
           <img alt="signature" src={base64Image} />
@@ -58,59 +61,88 @@ function App() {
               CREATE A SIGNATURE
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-full lg:max-w-4xl bg-white">
-            <DialogHeader>
+          <DialogContent className="max-w-full lg:max-w-6xl bg-dialogAccent p-0 gap-0">
+            <DialogHeader className="py-8 px-6">
               <DialogTitle>Add Signature</DialogTitle>
             </DialogHeader>
-            <Tabs defaultValue="draw">
-              <TabsList>
-                <TabsTrigger className="font-bold" value="draw">
+            <Separator />
+            <div className="flex justify-between px-6 pt-2">
+              <div className="flex items-center space-x-8 relative px-4">
+                <button
+                  className={`px-4 pb-4 pt-2 focus:outline-none box-content text-md ${
+                    selectedTab === "draw"
+                      ? "border-b-2 border-dialogAccent text-brand"
+                      : "border-b-2 border-transparent"
+                  }`}
+                  onClick={() => setSelectedTab("draw")}>
                   Draw
-                </TabsTrigger>
-                <TabsTrigger className="font-bold" value="type">
+                </button>
+                <button
+                  className={`px-4 pb-4 pt-2 focus:outline-none box-content text-md ${
+                    selectedTab === "type"
+                      ? "border-b-2 border-dialogAccent text-brand"
+                      : "border-b-2 border-transparent"
+                  }`}
+                  onClick={() => setSelectedTab("type")}>
                   Type
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="draw">
-                <div className="flex flex-col">
-                  <div className="flex items-center space-x-2 ">
-                    <Switch
-                      id="color-uniformity"
-                      checked={isColorUniform}
-                      onCheckedChange={value =>
-                        setIsColorUniform(Boolean(value))
-                      }
-                    />
-                    <Label
-                      htmlFor="color-uniformity"
-                      className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Uniform color
-                    </Label>
-                  </div>
-                  <SignatureDrawPad
-                    ref={ref}
-                    colors={colors}
-                    uniformColor={isColorUniform}
+                </button>
+                <div
+                  className={`absolute bottom-0 left-[-20px] h-0.5 w-20 bg-brand transition-transform ${
+                    selectedTab === "type"
+                      ? "transform translate-x-24"
+                      : "transform translate-x-0"
+                  }`}
+                />
+              </div>
+              {selectedTab === "draw" && (
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="color-uniformity"
+                    checked={isColorUniform}
+                    onCheckedChange={value =>
+                      setIsColorUniform(Boolean(value))
+                    }
                   />
+                  <Label
+                    htmlFor="color-uniformity"
+                    className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Uniform color
+                  </Label>
                 </div>
-              </TabsContent>
-              <TabsContent value="type">
-                <SignatureTypePad ref={ref} colors={colors} />
-              </TabsContent>
-            </Tabs>
-            <DialogFooter className="sm:justify-end gap-2">
+              )}
+            </div>
+            <Separator />
+            <div className="flex flex-col">
+              {selectedTab === "draw" ? (
+                <SignatureDrawPad
+                  ref={ref}
+                  colors={colors}
+                  uniformColor={isColorUniform}
+                  setValid={value => setSubmitValid(value)}
+                />
+              ) : (
+                <SignatureTypePad
+                  colors={colors}
+                  ref={ref}
+                  setValid={value => setSubmitValid(value)}
+                />
+              )}
+            </div>
+            <Separator />
+            <DialogFooter className="sm:justify-end gap-2 p-6">
               <DialogClose asChild>
                 <Button
                   type="button"
                   variant="secondary"
-                  className="rounded-sm">
+                  className="rounded-sm border border-gray-300">
                   Cancel
                 </Button>
               </DialogClose>
               <DialogClose asChild>
                 <Button
                   type="button"
-                  className="text-white rounded-sm bg-brand"
+                  disabled={!submitValid}
+                  className="text-white rounded-sm bg-brand hover:bg-brand"
                   onClick={handleExport}>
                   Done
                 </Button>

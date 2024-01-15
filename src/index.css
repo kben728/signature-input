@@ -74,14 +74,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-  /* Custom radio styling */
-.custom-radio {
-  width: 1.5rem; /* Set the width of the entire radio button */
-  height: 1.5rem; /* Set the height of the entire radio button */
-}
-
-.custom-radio:checked + .custom-radio-label::before {
-  width: 1rem; /* Set the width of the central dot */
-  height: 1rem; /* Set the height of the central dot */
-}
