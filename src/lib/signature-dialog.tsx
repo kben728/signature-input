@@ -44,7 +44,7 @@ const SignatureDialog = ({ colors, children, setImage }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-full lg:max-w-6xl bg-dialogAccent p-0 gap-0">
+      <DialogContent className="max-w-full lg:max-w-6xl bg-dialogAccent p-0 gap-0 h-full sm:max-h-[690px] overflow-auto">
         <DialogHeader className="py-8 px-6">
           <DialogTitle>Add Signature</DialogTitle>
         </DialogHeader>
