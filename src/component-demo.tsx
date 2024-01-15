@@ -36,4 +36,4 @@ function Demo() {
   );
 }
 
-export default App;
+export default Demo;
