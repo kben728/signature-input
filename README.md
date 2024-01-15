@@ -6,7 +6,7 @@ Outputs the result as a **base64 encoded** string.
 ![signature-draw-pad](samples/signature-draw.gif)
 
 ### Input
-![signature-input-pad](samples/signature-input.gif)
+![signature-input-pad](samples/signature-input-pad.gif)
 
 ## Tech
 - react
